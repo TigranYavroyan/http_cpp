@@ -8,6 +8,7 @@
 #include <iostream>
 #include <unordered_map>
 #include <string>
+#include <fstream>
 
 namespace beast = boost::beast;
 namespace http = beast::http;
