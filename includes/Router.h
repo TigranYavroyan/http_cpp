@@ -5,10 +5,12 @@
 
 class Router {
 public:
+    Router();
+
     void get(const std::string& path, Handler handler);
     void post(const std::string& path, Handler handler);
     bool route(const Request& req, Response& res) const;
-
+    void print_routes() const;
 private:
     std::unordered_map<std::string, Handler> routes_;
 };

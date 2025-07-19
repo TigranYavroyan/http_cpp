@@ -9,11 +9,14 @@
 #include <unordered_map>
 #include <string>
 #include <fstream>
+#include <nlohmann/json.hpp>
+#include <dotenv.h>
 
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
 using tcp = net::ip::tcp;
+using json = nlohmann::json;
 
 using Request  = boost::beast::http::request<boost::beast::http::string_body>;
 using Response = boost::beast::http::response<boost::beast::http::string_body>;

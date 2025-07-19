@@ -7,6 +7,7 @@ target_sources(SRCS_FILES PRIVATE
     controllers/post.cpp
     router/Router.cpp
     router/global_Router.cpp
+    dotenv/dotenv.cpp
 )
 
 target_include_directories(SRCS_FILES PRIVATE ../includes)
