@@ -1,13 +1,13 @@
 #include <get.h>
 
-void root (const Request& req, Response& res) {
+void root (Request& req, Response& res) {
     res.result(http::status::ok);
     res.set(http::field::content_type, "text/html");
     res.body() = "<h1>Hello from router</h1>";
     res.prepare_payload();
 }
 
-void index_html (const Request& req, Response& res) {
+void index_html (Request& req, Response& res) {
     std::ifstream file("/home/tigran/Desktop/learn/http_cpp/public/index.html");
     if (!file) {
         http::response<http::string_body> res{http::status::not_found, req.version()};

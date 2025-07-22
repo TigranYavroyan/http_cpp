@@ -10,6 +10,9 @@
 #include <string>
 #include <fstream>
 #include <nlohmann/json.hpp>
+#include <memory>
+#include <list>
+
 #include <dotenv.h>
 
 namespace beast = boost::beast;
@@ -20,6 +23,6 @@ using json = nlohmann::json;
 
 using Request  = boost::beast::http::request<boost::beast::http::string_body>;
 using Response = boost::beast::http::response<boost::beast::http::string_body>;
-using Handler  = std::function<void(const Request&, Response&)>;
+using Handler  = std::function<void(Request&, Response&)>;
 
 #endif // INCLUDES_HPP

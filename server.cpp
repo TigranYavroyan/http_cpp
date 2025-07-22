@@ -6,14 +6,39 @@
 #include <get.h>
 #include <handle_session.h>
 #include <dotenv.h>
+#include <middleware.hpp>
+#include <next.hpp>
+
+void mid (Request& req, Response& res, Next& next) {
+    std::cout << "The req body:" <<  req.body() << std::endl;
+    if (/** fstan */true) {
+        next();
+    }
+}
+
+void logger (Request& req, Response& res, Next& next) {
+    std::cout << "Logging request: " << req.target() << "\n";
+    next(); // Calls next middleware in chain
+}
+
+void validator (Request& req, Response& res, Next& next) {
+    json body = json::parse(req.body());
+    if (body.contains("valid")) {
+        std::cout << "Got valid obj" << std::endl;
+        next();
+    }
+}
 
 int main() {
     dotenv::init("/home/tigran/Desktop/learn/http_cpp/.env");
-
     router.get("/", root);
     router.post("/submit", submit);
     router.get("/index.html", index_html);
     router.post("/user", pong);
+
+    router.use(validator);
+    router.use("/submit", Middleware(mid));
+    router.use("/submit", Middleware(logger));
 
     router.print_routes();
     std::string port = std::getenv("PORT");
