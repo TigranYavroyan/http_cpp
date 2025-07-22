@@ -10,6 +10,23 @@ void Router::post(const std::string& path, Handler handler) {
     routes_["POST: " + path] = std::move(handler);
 }
 
+void Router::del(const std::string& path, Handler handler) {
+    routes_["DELETE: " + path] = std::move(handler);
+}
+
+void Router::update(const std::string& path, Handler handler) {
+    routes_["UPDATE: " + path] = std::move(handler);
+}
+
+void Router::put(const std::string& path, Handler handler) {
+    routes_["PUT: " + path] = std::move(handler);
+}
+
+void Router::patch(const std::string& path, Handler handler) {
+    routes_["PATCH: " + path] = std::move(handler);
+}
+
+
 bool Router::route(Request& req, Response& res) const {
     std::string path = req.target().to_string();
     std::string key = req.method_string().to_string() + ": " + path;

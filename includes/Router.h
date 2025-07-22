@@ -10,6 +10,10 @@ public:
 
     void get(const std::string& path, Handler handler);
     void post(const std::string& path, Handler handler);
+    void del(const std::string& path, Handler handler);
+    void update(const std::string& path, Handler handler);
+    void put(const std::string& path, Handler handler);
+    void patch(const std::string& path, Handler handler);
 
     void use(const std::string& path, Middleware middleware);
     void use(const std::string& path, MiddlewareFunc middleware);
