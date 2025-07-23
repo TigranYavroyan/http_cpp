@@ -10,13 +10,9 @@ using MiddlewareFunc = std::function<void(Request&, Response&, Next&)>;
 
 class Middleware {
 public:
-    Middleware(MiddlewareFunc func) : func_(std::move(func)) {}
-
-    void operator() (Request& req, Response& res, Next& next) {
-        func_(req, res, next);
-    }
-
-    virtual ~Middleware() {}
+    Middleware(MiddlewareFunc func);
+    void operator() (Request& req, Response& res, Next& next);
+    virtual ~Middleware();
 private:
     MiddlewareFunc func_;
 };

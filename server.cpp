@@ -6,8 +6,8 @@
 #include <get.h>
 #include <handle_session.h>
 #include <dotenv.h>
-#include <middleware.hpp>
-#include <next.hpp>
+#include <middleware.h>
+#include <next.h>
 
 void mid (Request& req, Response& res, Next& next) {
     std::cout << "The req body:" <<  req.body() << std::endl;

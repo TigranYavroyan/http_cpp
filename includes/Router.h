@@ -1,8 +1,8 @@
 #ifndef ROUTER_H
 #define ROUTER_H
 
-#include <middleware.hpp>
-#include <next.hpp>
+#include <middleware.h>
+#include <next.h>
 
 class Router {
 public:
