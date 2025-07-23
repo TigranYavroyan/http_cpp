@@ -1,6 +1,6 @@
 #include <request.h>
 
-Request::Request (BeastReq& req) : req_(std::move(req)) {}
+Request::Request (BeastReq&& req) : req_(std::move(req)) {}
 
 BeastReq& Request::raw () {
     return req_;

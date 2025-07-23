@@ -10,8 +10,8 @@ void handle_session(tcp::socket socket) {
     BeastRes res{http::status::not_found, req.version()};
     res.set(http::field::server, "Boost.Beast");
 
-    Request wrapper_req(req);
-    Response wrapper_res(res);
+    Request wrapper_req(std::move(req));
+    Response wrapper_res(std::move(res));
 
     if (!router.route(wrapper_req, wrapper_res)) {
         wrapper_res.err();

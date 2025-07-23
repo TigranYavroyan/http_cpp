@@ -5,7 +5,7 @@ Response::Response() : sent_(false) {
         res_.keep_alive(true);
 }
 
-Response::Response(BeastRes& res) : res_(std::move(res)) {}
+Response::Response(BeastRes&& res) : res_(std::move(res)), sent_(false) {}
 
 Response& Response::set_header(const std::string& key, const std::string& value) {
     res_.set(key, value);
@@ -57,4 +57,11 @@ BeastRes& Response::raw() {
 
 bool Response::is_sent() const {
     return sent_;
+}
+
+void Response::reset() {
+    res_ = {};
+    sent_ = false;
+    res_.version(11);
+    res_.keep_alive(true);
 }

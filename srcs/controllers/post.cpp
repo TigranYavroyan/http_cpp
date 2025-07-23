@@ -6,7 +6,6 @@ void submit (Request& req, Response& res) {
 }
 
 void pong (Request& req, Response& res) {
-    std::cout << req.body() << std::endl;
     res.status(http::status::ok);
     json r = {
         {"type", "send by server"},

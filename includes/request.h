@@ -5,9 +5,9 @@
 
 class Request {
 public:
+    // !later remove the copying
     Request () = default;
-    Request (BeastReq& req);
-    ~Request () = default;
+    Request (BeastReq&& req);
 public:
     BeastReq& raw ();
     void set_body (const json& body);
