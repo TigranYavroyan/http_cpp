@@ -1,27 +1,20 @@
 #include <get.h>
 
 void root (Request& req, Response& res) {
-    res.result(http::status::ok);
-    res.set(http::field::content_type, "text/html");
-    res.body() = "<h1>Hello from router</h1>";
-    res.prepare_payload();
+    res.set_header(http::field::content_type, "text/html");
+    res.send("<h1>Hello from router</h1>");
 }
 
 void index_html (Request& req, Response& res) {
     std::ifstream file("/home/tigran/Desktop/learn/http_cpp/public/index.html");
     if (!file) {
-        http::response<http::string_body> res{http::status::not_found, req.version()};
-        res.set(http::field::content_type, "text/plain");
-        res.body() = "File not found.";
-        res.prepare_payload();
+        res.send("File not found");
         return;
     }
-
+    std::cout << __func__ << std::endl;
     std::string content((std::istreambuf_iterator<char>(file)),
                         std::istreambuf_iterator<char>());
-    
-    res.body() = content;
-    res.result(http::status::ok);
-    res.set(http::field::content_type, "text/html");
-    res.prepare_payload();  
+    std::cout << "Is sent: " << res.is_sent() << std::endl;
+    res.set_header(boost::beast::http::field::content_type, "text/html");
+    res.send(content);
 }

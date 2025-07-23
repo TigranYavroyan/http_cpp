@@ -3,20 +3,21 @@
 
 void handle_session(tcp::socket socket) {
     beast::flat_buffer buffer;
-    Request req;
+    BeastReq req;
 
     http::read(socket, buffer, req);
 
-    Response res{http::status::not_found, req.version()};
+    BeastRes res{http::status::not_found, req.version()};
     res.set(http::field::server, "Boost.Beast");
 
-    if (!router.route(req, res)) {
-        res.set(http::field::content_type, "text/plain");
-        res.body() = "404 Not Found";
-        res.prepare_payload();
+    Request wrapper_req(req);
+    Response wrapper_res(res);
+
+    if (!router.route(wrapper_req, wrapper_res)) {
+        wrapper_res.err();
     }
 
-    http::write(socket, res);
+    http::write(socket, wrapper_res.raw());
 
     beast::error_code ec;
     socket.shutdown(tcp::socket::shutdown_send, ec);

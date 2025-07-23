@@ -28,12 +28,12 @@ void Router::patch(const std::string& path, Handler handler) {
 
 
 bool Router::route(Request& req, Response& res) const {
-    std::string path = req.target().to_string();
-    std::string key = req.method_string().to_string() + ": " + path;
+    std::lock_guard<std::mutex> l(m);
+    std::string path = req.url();
+    std::string key = req.method() + ": " + path;
     auto it = routes_.find(key);
     if (it == routes_.end())
         return false;
-
 
     std::vector<Middleware> router_spec_middlewares = pre_handlers;
     auto [begin, end] = middlewares.equal_range(path);
@@ -46,7 +46,7 @@ bool Router::route(Request& req, Response& res) const {
     });
     Next next(router_spec_middlewares, req, res);
     next();
-
+    
     return true;
 }
 

@@ -2,6 +2,8 @@
 #define MIDDLEWARE_HPP
 
 #include <includes.h>
+#include <request.h>
+#include <response.h>
 
 class Next;
 class Middleware;

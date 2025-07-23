@@ -9,6 +9,10 @@ target_sources(SRCS_FILES PRIVATE
     http/router/global_Router.cpp
     http/core/next.cpp
     http/core/middleware.cpp
+    http/core/middleware.cpp
+    http/core/request.cpp
+    http/core/response.cpp
+    middlewares/json_parse.cpp
     dotenv/dotenv.cpp
 )
 

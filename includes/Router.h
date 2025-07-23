@@ -3,6 +3,7 @@
 
 #include <middleware.h>
 #include <next.h>
+#include <mutex>
 
 class Router {
 public:
@@ -26,6 +27,7 @@ private:
     std::vector<Middleware> pre_handlers;
     std::unordered_map<std::string, Handler> routes_;
     std::unordered_multimap<std::string, Middleware> middlewares;
+    mutable std::mutex m;
 };
 
 extern Router router;

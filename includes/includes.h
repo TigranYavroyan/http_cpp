@@ -12,6 +12,7 @@
 #include <nlohmann/json.hpp>
 #include <memory>
 #include <list>
+#include <optional>
 
 #include <dotenv.h>
 
@@ -21,8 +22,11 @@ namespace net = boost::asio;
 using tcp = net::ip::tcp;
 using json = nlohmann::json;
 
-using Request  = boost::beast::http::request<boost::beast::http::string_body>;
-using Response = boost::beast::http::response<boost::beast::http::string_body>;
+class Request;
+class Response;
+
+using BeastReq = boost::beast::http::request<boost::beast::http::string_body>;
+using BeastRes = boost::beast::http::response<boost::beast::http::string_body>;
 using Handler  = std::function<void(Request&, Response&)>;
 
 #endif // INCLUDES_HPP

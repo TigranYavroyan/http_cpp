@@ -8,25 +8,24 @@
 #include <dotenv.h>
 #include <middleware.h>
 #include <next.h>
+#include <json_parse.h>
 
 void mid (Request& req, Response& res, Next& next) {
-    std::cout << "The req body:" <<  req.body() << std::endl;
-    if (/** fstan */true) {
-        next();
+    std::optional<json> body = req.parsed_body();
+
+    if (body.has_value()) {
+        std::cout << "Parsed json body: " << body.value() << std::endl;
+        if (body.value()["name"] == "Tiko")
+            std::cout << "Barev Tiko" << std::endl;
     }
+
+    std::cout << "The req body: " <<  req.body() << std::endl;
+    next();
 }
 
 void logger (Request& req, Response& res, Next& next) {
-    std::cout << "Logging request: " << req.target() << "\n";
+    std::cout << "Logging Request: " << req.url() << "\n";
     next(); // Calls next middleware in chain
-}
-
-void validator (Request& req, Response& res, Next& next) {
-    json body = json::parse(req.body());
-    if (body.contains("valid")) {
-        std::cout << "Got valid obj" << std::endl;
-        next();
-    }
 }
 
 int main() {
@@ -36,9 +35,9 @@ int main() {
     router.get("/index.html", index_html);
     router.post("/user", pong);
 
-    router.use(validator);
-    router.use("/submit", Middleware(mid));
-    router.use("/submit", Middleware(logger));
+    router.use(json_parser);
+    router.use("/submit", mid);
+    router.use("/submit", logger);
 
     router.print_routes();
     std::string port = std::getenv("PORT");
