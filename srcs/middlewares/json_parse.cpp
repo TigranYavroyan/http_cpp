@@ -1,4 +1,4 @@
-#include <json_parse.h>
+#include <middlewares.h>
 
 void json_parser (Request& req, Response& res, Next& next) {
     if (req.method() == "GET")
@@ -12,6 +12,7 @@ void json_parser (Request& req, Response& res, Next& next) {
         } catch (const nlohmann::json::parse_error& e) {
             std::cerr << e.what() << std::endl;
             std::cout << "Error from json parsing" << std::endl;
+            res.err();
         }
     }
 }

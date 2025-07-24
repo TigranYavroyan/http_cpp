@@ -44,10 +44,10 @@ bool Router::route(Request& req, Response& res) const {
     router_spec_middlewares.emplace_back([handler = it->second](Request& req, Response& res, Next& next){
         handler(req, res);
     });
+
     Next next(router_spec_middlewares, req, res);
-    next();
-    
-    return true;
+
+    return next();
 }
 
 void Router::use(const std::string& path, Middleware middleware) {

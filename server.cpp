@@ -8,24 +8,15 @@
 #include <dotenv.h>
 #include <middleware.h>
 #include <next.h>
-#include <json_parse.h>
+#include <middlewares.h>
 
-void mid (Request& req, Response& res, Next& next) {
-    std::optional<json> body = req.parsed_body();
-
-    if (body.has_value()) {
-        std::cout << "Parsed json body: " << body.value() << std::endl;
-        if (body.value()["name"] == "Tiko")
-            std::cout << "Barev Tiko" << std::endl;
+void checking_parsed_object (Request& req, Response& res, Next& next) {
+    auto body = req.parsed_body();
+    if (body.value_or(0) != 0) {
+        auto parsed = body.value();
+        std::cout << "Parsed json: " << parsed << std::endl;
     }
-
-    std::cout << "The req body: " <<  req.body() << std::endl;
     next();
-}
-
-void logger (Request& req, Response& res, Next& next) {
-    std::cout << "Logging Request: " << req.url() << "\n";
-    next(); // Calls next middleware in chain
 }
 
 int main() {
@@ -36,8 +27,7 @@ int main() {
     router.post("/user", pong);
 
     router.use(json_parser);
-    router.use("/submit", mid);
-    router.use("/submit", logger);
+    router.use(checking_parsed_object);
 
     router.print_routes();
     std::string port = std::getenv("PORT");

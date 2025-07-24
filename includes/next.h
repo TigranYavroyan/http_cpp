@@ -8,7 +8,7 @@ class Next {
 public:
     Next(std::vector<Middleware>& middlewares, Request& req, Response& res);
     Next(Next&& other);
-    void operator() ();
+    bool operator() ();
 private:
     Request& req_;
     Response& res_;

@@ -14,9 +14,12 @@ Next::Next(Next&& other):
     index_(other.index_)
 {}
 
-void Next::operator() () {
+bool Next::operator() () {
     if (index_ < middlewares_.size()) {
         Middleware& current = middlewares_[index_++];
         current(req_, res_, *this);
     }
+
+    return (index_ == middlewares_.size());
+    
 }

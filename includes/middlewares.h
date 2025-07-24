@@ -1,5 +1,5 @@
-#ifndef JSON_PARSE_HPP
-#define JSON_PARSE_HPP
+#ifndef MIDLLEWARES_HPP
+#define MIDLLEWARES_HPP
 
 #include <includes.h>
 #include <next.h>
@@ -7,4 +7,4 @@
 
 void json_parser (Request& req, Response& res, Next& next);
 
-#endif // JSON_PARSE_HPP
+#endif // MIDLLEWARES_HPP
