@@ -10,10 +10,10 @@ public:
     Response(BeastRes&& res);
 public:
     Response& set_header(const std::string& key, const std::string& value);
-    Response& set_header(boost::beast::http::field field, const std::string& value);
+    Response& set_header(beast::http::field field, const std::string& value);
 
     Response& status(int code);
-    Response& status(boost::beast::http::status s);
+    Response& status(beast::http::status s);
 
     Response& send(const std::string& body);
     Response& json(const nlohmann::json& obj);

@@ -12,6 +12,7 @@ target_sources(SRCS_FILES PRIVATE
     http/core/middleware.cpp
     http/core/request.cpp
     http/core/response.cpp
+    http/core/http_server.cpp
     middlewares/json_parse.cpp
     dotenv/dotenv.cpp
 )

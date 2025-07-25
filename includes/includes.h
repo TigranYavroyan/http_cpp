@@ -25,8 +25,8 @@ using json = nlohmann::json;
 class Request;
 class Response;
 
-using BeastReq = boost::beast::http::request<boost::beast::http::string_body>;
-using BeastRes = boost::beast::http::response<boost::beast::http::string_body>;
+using BeastReq = beast::http::request<beast::http::string_body>;
+using BeastRes = beast::http::response<beast::http::string_body>;
 using Handler  = std::function<void(Request&, Response&)>;
 
 #endif // INCLUDES_HPP

@@ -13,9 +13,7 @@ void handle_session(tcp::socket socket) {
     Request wrapper_req(std::move(req));
     Response wrapper_res(std::move(res));
 
-    if (!router.route(wrapper_req, wrapper_res)) {
-        wrapper_res.err();
-    }
+    router.route(wrapper_req, wrapper_res);
 
     http::write(socket, wrapper_res.raw());
 
