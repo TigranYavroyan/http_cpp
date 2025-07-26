@@ -9,6 +9,11 @@ class Router {
 public:
     Router();
 
+    Router (const Router&) = delete;
+    Router& operator= (const Router&) = delete;
+    Router (Router&& other) = delete;
+    Router& operator= (Router&& other) = delete;
+
     void get(const std::string& path, Handler handler);
     void post(const std::string& path, Handler handler);
     void del(const std::string& path, Handler handler);
@@ -29,7 +34,5 @@ private:
     std::unordered_multimap<std::string, Middleware> middlewares;
     mutable std::mutex m;
 };
-
-extern Router router;
 
 #endif // ROUTER_H

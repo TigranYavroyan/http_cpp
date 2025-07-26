@@ -6,7 +6,6 @@ target_sources(SRCS_FILES PRIVATE
     controllers/get.cpp
     controllers/post.cpp
     http/router/Router.cpp
-    http/router/global_Router.cpp
     http/core/next.cpp
     http/core/middleware.cpp
     http/core/middleware.cpp

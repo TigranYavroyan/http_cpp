@@ -2,6 +2,9 @@
 #define HTTP_SERVER_HPP
 
 #include <includes.h>
+#include <request.h>
+#include <response.h>
+#include <router.h>
 
 class HttpServer {
 public:
@@ -9,17 +12,33 @@ public:
 
     HttpServer (const HttpServer&) = delete;
     HttpServer& operator= (const HttpServer&) = delete;
+    HttpServer (HttpServer&& other) = delete;
+    HttpServer& operator= (HttpServer&& other) = delete;
 
     HttpServer (int thread_count = 1);
-    HttpServer(HttpServer&& other);
 public:
-    HttpServer& operator= (HttpServer&& other);
     void listen (unsigned short port, Callback cb);
+
+    void get(const std::string& path, Handler handler);
+    void post(const std::string& path, Handler handler);
+    void del(const std::string& path, Handler handler);
+    void update(const std::string& path, Handler handler);
+    void put(const std::string& path, Handler handler);
+    void patch(const std::string& path, Handler handler);
+
+    void use(const std::string& path, Middleware middleware);
+    void use(const std::string& path, MiddlewareFunc middleware);
+    void use(Middleware middleware);
+    void use(MiddlewareFunc middleware);
+
+    void print_routes () const;
 private:
     void _do_accept();
+    void _handle_session(tcp::socket socket);
 
-    net::io_context ioc;
-    tcp::acceptor acceptor;
+    net::io_context ioc_;
+    tcp::acceptor acceptor_;
+    Router router_;
 };
 
 #endif // HTTP_SERVER_HPP
