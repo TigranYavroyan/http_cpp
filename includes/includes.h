@@ -16,6 +16,8 @@
 
 #include <dotenv.h>
 
+extern std::string project_root;
+
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;

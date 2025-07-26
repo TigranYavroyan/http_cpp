@@ -1,7 +1,7 @@
 #include <router.h>
 #include <post.h>
 #include <get.h>
-#include <handle_session.h>
+#include <server_static.h>
 #include <dotenv.h>
 #include <middleware.h>
 #include <next.h>
@@ -17,6 +17,7 @@ void log3 (Request& req, Response& res, Next& next) {
 int main() {
     dotenv::init("/home/tigran/Desktop/learn/http_cpp/.env");
     std::string port = std::getenv("PORT");
+    project_root = std::getenv("PROJECT_ROOT");
 
     HttpServer http_server;
 
@@ -28,13 +29,15 @@ int main() {
 
     Middleware m(log3);
 
-    http_server.get("/", root);
     http_server.post("/submit", submit);
-    http_server.get("/index.html", index_html);
     http_server.post("/user", pong);
 
-    http_server.use(json_parser, m, log3, log4);
-    http_server.use("/submit", json_parser, m, log3, log4);
+    http_server.get("/index.html", serve_static);
+    http_server.get("/style.css", serve_static);
+    http_server.get("/app.js", serve_static);
+
+    http_server.use(json_parser);
+    http_server.use("/submit", m, log3, log4);
 
     http_server.listen(std::stoi(port), [&](){
         std::cout << "Listening on port " << port << "...\n" << std::endl;

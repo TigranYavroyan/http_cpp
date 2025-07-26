@@ -11,9 +11,11 @@ target_sources(SRCS_FILES PRIVATE
     http/core/middleware.cpp
     http/core/request.cpp
     http/core/response.cpp
+    http/core/serve_static.cpp
     http/core/http_server.cpp
     middlewares/json_parse.cpp
     dotenv/dotenv.cpp
+    dotenv/glob_variable.cpp
 )
 
 target_include_directories(SRCS_FILES PRIVATE ../includes)

@@ -1,5 +1,6 @@
 {
     "files.associations": {
+        "*.c": "c",
         "thread": "cpp",
         "bitset": "cpp",
         "array": "cpp",
@@ -72,6 +73,7 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "valarray": "cpp",
-        "cfenv": "cpp"
+        "cfenv": "cpp",
+        "filesystem": "cpp"
     }
 }
