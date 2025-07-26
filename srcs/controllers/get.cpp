@@ -2,7 +2,7 @@
 
 void root (Request& req, Response& res) {
     res.set_header(http::field::content_type, "text/html");
-    res.send("<h1>Hello from router</h1>");
+    res.send("<h1>Hello from router</h1>").status(200);
 }
 
 void index_html (Request& req, Response& res) {
@@ -15,5 +15,5 @@ void index_html (Request& req, Response& res) {
     std::string content((std::istreambuf_iterator<char>(file)),
                         std::istreambuf_iterator<char>());
     res.set_header(beast::http::field::content_type, "text/html");
-    res.send(content);
+    res.send(content).status(200);
 }

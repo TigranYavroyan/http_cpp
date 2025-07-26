@@ -25,6 +25,7 @@ public:
     void use(const std::string& path, MiddlewareFunc middleware);
     void use(Middleware middleware);
     void use(MiddlewareFunc middleware);
+    void use(MiddlewareFuncPtr middleware);
 
     bool route(Request& req, Response& res) const;
     void print_routes() const;

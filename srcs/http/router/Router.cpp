@@ -66,6 +66,10 @@ void Router::use(MiddlewareFunc middleware) {
     pre_handlers.emplace_back(middleware);
 }
 
+void Router::use(MiddlewareFuncPtr middleware) {
+    pre_handlers.emplace_back(middleware);
+}
+
 void Router::print_routes() const {
     std::cout << " ----- Listening on this routes ----- " << std::endl;
     for (auto& it : routes_) {

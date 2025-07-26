@@ -1,5 +1,7 @@
 #include <http_server.h>
 #include <thread>
+#include <time_calculator.h>
+#include <is_middleware.hpp>
 
 HttpServer::HttpServer (int thread_count):
     ioc_{thread_count},
@@ -61,6 +63,10 @@ void HttpServer::use(MiddlewareFunc middleware) {
     router_.use(middleware);
 }
 
+void HttpServer::use(MiddlewareFuncPtr middleware) {
+    router_.use(middleware);
+}
+
 void HttpServer::print_routes () const {
     router_.print_routes();
 }
@@ -78,26 +84,43 @@ void HttpServer::_do_accept() {
 }
 
 void HttpServer::_handle_session(tcp::socket socket) {
-    beast::flat_buffer buffer;
-    BeastReq req;
+    try {
+        beast::flat_buffer buffer;
+        BeastReq req;
 
-    http::read(socket, buffer, req);
+        http::read(socket, buffer, req);
 
-    BeastRes res{http::status::not_found, req.version()};
-    res.set(http::field::server, "Boost.Beast");
+        BeastRes res{http::status::not_found, req.version()};
+        res.set(http::field::server, "Boost.Beast");
 
-    Request wrapper_req(std::move(req));
-    Response wrapper_res(std::move(res));
+        Request wrapper_req(std::move(req));
+        Response wrapper_res(std::move(res));
 
-    if (!router_.route(wrapper_req, wrapper_res))
-        std::cerr << "Middlewares doesn't pass\n";
+        auto [ms, routed] = time_calculate<bool>([&]() {
+            return router_.route(wrapper_req, wrapper_res);
+        });
 
-    http::write(socket, wrapper_res.raw());
+        if (!routed)
+            std::cerr << "Middlewares doesn't pass\n";
 
-    beast::error_code ec;
-    socket.shutdown(tcp::socket::shutdown_send, ec);
+        _log_routing(ms, wrapper_req, wrapper_res);
 
-    if(ec.failed()) {
-        std::cerr << "Error: " << ec.message() << std::endl;
+        http::write(socket, wrapper_res.raw());
+
+        beast::error_code ec;
+        socket.shutdown(tcp::socket::shutdown_send, ec);
+        if(ec.failed()) {
+            std::cerr << "Error: " << ec.message() << std::endl;
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Session Error: " << e.what() << std::endl;
     }
+}
+
+void HttpServer::_log_routing (int64_t ms, const Request& req, Response& res) const {
+    std::cout << "[" << req.method() << "] "
+                  << req.url() << " -> "
+                  << static_cast<unsigned>(res.raw().result_int()) << " "
+                  << res.raw().result() << " ("
+                  << ms << " ms)" << std::endl;
 }
