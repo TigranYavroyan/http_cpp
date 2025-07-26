@@ -23,6 +23,7 @@ public:
 
     void use(const std::string& path, Middleware middleware);
     void use(const std::string& path, MiddlewareFunc middleware);
+    void use(const std::string& path, MiddlewareFuncPtr middleware);
     void use(Middleware middleware);
     void use(MiddlewareFunc middleware);
     void use(MiddlewareFuncPtr middleware);

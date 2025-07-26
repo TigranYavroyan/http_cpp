@@ -55,6 +55,11 @@ void HttpServer::use(const std::string& path, MiddlewareFunc middleware) {
     router_.use(path, middleware);
 }
 
+void HttpServer::use(const std::string& path, MiddlewareFuncPtr middleware) {
+    router_.use(path, middleware);
+}
+
+
 void HttpServer::use(Middleware middleware) {
     router_.use(middleware);
 }

@@ -34,6 +34,7 @@ int main() {
     http_server.post("/user", pong);
 
     http_server.use(json_parser, m, log3, log4);
+    http_server.use("/submit", json_parser, m, log3, log4);
 
     http_server.listen(std::stoi(port), [&](){
         std::cout << "Listening on port " << port << "...\n" << std::endl;

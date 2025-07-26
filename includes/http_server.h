@@ -27,16 +27,18 @@ public:
     void update(const std::string& path, Handler handler);
     void put(const std::string& path, Handler handler);
     void patch(const std::string& path, Handler handler);
-
     
     template <typename... Mids>
     std::enable_if_t<are_all_middlewares_v<Mids...>>
-    use(Mids... ms) {
-        (use(ms), ...);
-    }
+    use(Mids... ms);
 
+    template <typename... Mids>
+    std::enable_if_t<are_all_middlewares_v<Mids...>>
+    use(const std::string& path, Mids... ms);
+    
     void use(const std::string& path, Middleware middleware);
     void use(const std::string& path, MiddlewareFunc middleware);
+    void use(const std::string& path, MiddlewareFuncPtr middleware);
     void use(Middleware middleware);
     void use(MiddlewareFunc middleware);
     void use(MiddlewareFuncPtr middleware);
@@ -51,6 +53,18 @@ private:
     tcp::acceptor acceptor_;
     Router router_;
 };
+
+template <typename... Mids>
+std::enable_if_t<are_all_middlewares_v<Mids...>>
+HttpServer::use(Mids... ms) {
+    (use(ms), ...);
+}
+
+template <typename... Mids>
+std::enable_if_t<are_all_middlewares_v<Mids...>>
+HttpServer::use(const std::string& path, Mids... ms) {
+    (use(path, ms), ...);
+}
 
 
 

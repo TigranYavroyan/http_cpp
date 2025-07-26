@@ -66,6 +66,10 @@ void Router::use(MiddlewareFunc middleware) {
     pre_handlers.emplace_back(middleware);
 }
 
+void Router::use(const std::string& path, MiddlewareFuncPtr middleware) {
+    pre_handlers.emplace_back(middleware);
+}
+
 void Router::use(MiddlewareFuncPtr middleware) {
     pre_handlers.emplace_back(middleware);
 }
