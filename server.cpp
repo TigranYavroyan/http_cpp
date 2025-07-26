@@ -9,18 +9,6 @@
 #include <middlewares.h>
 #include <http_server.h>
 
-void checking_parsed_object (Request& req, Response& res, Next& next) {
-    auto body = req.parsed_body();
-    if (body.value_or(0) != 0) {
-        auto parsed = body.value();
-        std::cout << "Parsed json: " << parsed << std::endl;
-        next();
-    }
-    else {
-        res.err();
-    }
-}
-
 int main() {
     dotenv::init("/home/tigran/Desktop/learn/http_cpp/.env");
     std::string port = std::getenv("PORT");
@@ -33,8 +21,6 @@ int main() {
     http_server.post("/user", pong);
 
     http_server.use(json_parser);
-    http_server.use(checking_parsed_object);
-
 
     http_server.listen(std::stoi(port), [&](){
         std::cout << "Listening on port " << port << "..." << std::endl;

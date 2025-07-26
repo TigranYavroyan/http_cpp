@@ -89,7 +89,8 @@ void HttpServer::_handle_session(tcp::socket socket) {
     Request wrapper_req(std::move(req));
     Response wrapper_res(std::move(res));
 
-    router_.route(wrapper_req, wrapper_res);
+    if (!router_.route(wrapper_req, wrapper_res))
+        std::cerr << "Middlewares doesn't pass\n";
 
     http::write(socket, wrapper_res.raw());
 
