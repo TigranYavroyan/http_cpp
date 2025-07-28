@@ -3,7 +3,9 @@ project(boost_beast_http)
 
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(PROJECT_ROOT "/home/tigran/Desktop/learn/http_cpp")
+
+# Add the cloned repo absolute path
+set(PROJECT_ROOT "")
 
 find_package(Boost REQUIRED)
 
