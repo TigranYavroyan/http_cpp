@@ -5,6 +5,6 @@
 #include <next.h>
 #include <request.h>
 
-void json_parser (Karich::Request& req, Karich::Response& res, Next& next);
+void json_parser (Karich::Request& req, Karich::Response& res, Karich::Next& next);
 
 #endif // MIDLLEWARES_HPP

@@ -1,3 +1,5 @@
 #include <string>
 
-std::string project_root;
+namespace Karich::globals {
+	std::string project_root;
+}

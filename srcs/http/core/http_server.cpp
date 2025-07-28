@@ -138,14 +138,13 @@ void Karich::HttpServer::_log_routing (int64_t ms, const Karich::Request& req, K
                   << ms << " ms)" << std::endl;
 }
 
-Middleware Karich::HttpServer::serve_static (const std::string& path) {
-    return Middleware([&path](Karich::Request& req, Karich::Response& res, Next& next){
+Karich::Middleware Karich::HttpServer::serve_static (const std::string& path) {
+    return Karich::Middleware([path](Karich::Request& req, Karich::Response& res, Karich::Next& next){
         std::string target = req.url();
         if (target == "/")
             target = "/index.html";
 
         fs::path file_path = fs::path(path + target);
-
         if (fs::exists(file_path) && fs::is_regular_file(file_path)) {
             std::ifstream file(file_path, std::ios::binary);
             if (!file.is_open()) {

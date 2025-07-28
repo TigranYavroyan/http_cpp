@@ -7,11 +7,20 @@
 #include <next.h>
 #include <middlewares.h>
 #include <http_server.h>
+#include <cstring>
 
 int main() {
-    dotenv::init("../.env");
+    #ifdef PROJECT_ROOT
+        Karich::globals::project_root = PROJECT_ROOT;
+        {
+            std::string env_path = Karich::globals::project_root + ".env";
+            dotenv::init(env_path.c_str());
+        }
+    #else
+        std::cout << "Define the project root folder" << std::endl;
+        return (EXIT_FAILURE);
+    #endif
     std::string port = std::getenv("PORT");
-    project_root = std::getenv("PROJECT_ROOT");
 
     Karich::HttpServer http_server;
 
@@ -19,7 +28,8 @@ int main() {
     http_server.post("/user", pong);
 
     http_server.use(json_parser);
-    http_server.use(http_server.serve_static("../public"));
+    http_server.use(http_server.serve_static(Karich::globals::project_root + "public"));
+
 
     http_server.listen(std::stoi(port), [&](){
         std::cout << "Listening on port " << port << "...\n" << std::endl;

@@ -1,10 +1,10 @@
 #include <middleware.h>
 
 
-Middleware::Middleware(MiddlewareFunc func) : func_(std::move(func)) {}
+Karich::Middleware::Middleware(Karich::MiddlewareFunc func) : func_(std::move(func)) {}
 
-void Middleware::operator() (Karich::Request& req, Karich::Response& res, Next& next) {
+void Karich::Middleware::operator() (Karich::Request& req, Karich::Response& res, Karich::Next& next) {
     func_(req, res, next);
 }
 
-Middleware::~Middleware() = default;
+Karich::Middleware::~Middleware() = default;

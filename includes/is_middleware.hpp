@@ -8,13 +8,13 @@ template <typename T>
 struct is_valid_middleware_type : std::false_type {};
 
 template <>
-struct is_valid_middleware_type<Middleware> : std::true_type {};
+struct is_valid_middleware_type<Karich::Middleware> : std::true_type {};
 
 template <>
-struct is_valid_middleware_type<MiddlewareFunc> : std::true_type {};
+struct is_valid_middleware_type<Karich::MiddlewareFunc> : std::true_type {};
 
 template <>
-struct is_valid_middleware_type<MiddlewareFuncPtr> : std::true_type {};
+struct is_valid_middleware_type<Karich::MiddlewareFuncPtr> : std::true_type {};
 
 template <typename T>
 constexpr bool is_valid_middleware_v = is_valid_middleware_type<T>::value;
