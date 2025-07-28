@@ -10,7 +10,7 @@ A lightweight and extensible HTTP server written in C++ using Boost.Beast, suppo
 - 📡 Route-based request handling (GET, POST, etc.)
 - 🧾 JSON request body parsing
 - 🗂 Static file serving (`index.html`, `style.css`, `app.js`)
-- ✅ C++20 and modern Boost usage
+- ✅ C++17 and modern Boost usage
 - 🔌 Easily extendable middleware chain
 
 ---
@@ -45,9 +45,28 @@ http_cpp/
 ### Prerequisites
 
 - CMake ≥ 3.10
-- C++20 compiler
+- C++17 compiler
 - Boost (Beast, Asio)
-- `dotenv-cpp` (for .env support)
+
+### Configuration
+
+You can configure port and other values via `.env`:
+
+```
+PORT=8080
+```
+
+If using `PROJECT_ROOT` to locate `.env`, define it when compiling (I recommend to define it in srcs/CMakeLists.txt file):
+
+```bash
+-DPROJECT_ROOT="\"/absolute/path/to/http_cpp\""
+```
+
+or
+
+```cmake
+set(PROJECT_ROOT /absolute/path/to/http_cpp)
+```
 
 ### Compile
 
@@ -66,46 +85,14 @@ make
 ./http_server
 ```
 
-You can configure port and other values via `.env`:
-
-```
-PORT=8080
-```
-
-If using `PROJECT_ROOT` to locate `.env`, define it when compiling (I recommend to define it in srcs/CMakeLists.txt file):
-
-```bash
--DPROJECT_ROOT="\"./http_cpp/\""
-```
-
-or
-
-```cmake
-set(PROJECT_ROOT /home/tigran/Desktop/learn/http_cpp)
-```
-
-Code snippet:
-
-```cpp
-#ifdef PROJECT_ROOT
-    Karich::globals::project_root = PROJECT_ROOT;
-    {
-        std::string env_path = Karich::globals::project_root + ".env";
-        dotenv::init(env_path.c_str());
-    }
-#else
-    std::cout << "Define the project root folder" << std::endl;
-    return (EXIT_FAILURE);
-#endif
-```
-
 ---
 
 ## ✍️ Example Route
 
 ```cpp
 router.get("/ping", [](const Request& req, Response& res, Next next) {
-    res.send("pong");
+    // status must be always set by user
+    res.send("pong").status(200);
 });
 ```
 
