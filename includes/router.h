@@ -28,7 +28,7 @@ public:
     void use(MiddlewareFunc middleware);
     void use(MiddlewareFuncPtr middleware);
 
-    bool route(Request& req, Response& res) const;
+    bool route(Karich::Request& req, Karich::Response& res) const;
     void print_routes() const;
 private:
     std::vector<Middleware> pre_handlers;

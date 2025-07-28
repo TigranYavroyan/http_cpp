@@ -1,6 +1,6 @@
 #include <next.h>
 
-Next::Next(std::vector<Middleware>& middlewares, Request& req, Response& res): 
+Next::Next(std::vector<Middleware>& middlewares, Karich::Request& req, Karich::Response& res): 
     req_(req),
     res_(res),
     middlewares_(middlewares),

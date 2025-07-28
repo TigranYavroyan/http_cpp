@@ -1,6 +1,6 @@
-#include <server_static.h>
+#include <utils.h>
 
-void serve_static(Request& req, Response& res) {
+void Karich::utils::serve_static(Karich::Request& req, Karich::Response& res) {
     std::string base_path = project_root + "public";
     std::string url_path = req.url();
 

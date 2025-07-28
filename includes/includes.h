@@ -13,7 +13,7 @@
 #include <memory>
 #include <list>
 #include <optional>
-
+#include <filesystem>
 #include <dotenv.h>
 
 extern std::string project_root;
@@ -21,14 +21,17 @@ extern std::string project_root;
 namespace beast = boost::beast;
 namespace http = beast::http;
 namespace net = boost::asio;
+namespace fs = std::filesystem;
 using tcp = net::ip::tcp;
 using json = nlohmann::json;
 
-class Request;
-class Response;
+namespace Karich {
+	class Request;
+	class Response;
+}
 
 using BeastReq = beast::http::request<beast::http::string_body>;
 using BeastRes = beast::http::response<beast::http::string_body>;
-using Handler  = std::function<void(Request&, Response&)>;
+using Handler  = std::function<void(Karich::Request&, Karich::Response&)>;
 
 #endif // INCLUDES_HPP

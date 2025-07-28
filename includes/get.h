@@ -5,7 +5,7 @@
 #include <request.h>
 #include <response.h>
 
-void root (Request& req, Response& res);
-void index_html (Request& req, Response& res);
+void root (Karich::Request& req, Karich::Response& res);
+void index_html (Karich::Request& req, Karich::Response& res);
 
 #endif // GET_HPP

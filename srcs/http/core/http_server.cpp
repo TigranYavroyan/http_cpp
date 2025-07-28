@@ -1,14 +1,14 @@
 #include <http_server.h>
 #include <thread>
-#include <time_calculator.h>
+#include <utils.h>
 #include <is_middleware.hpp>
 
-HttpServer::HttpServer (int thread_count):
+Karich::HttpServer::HttpServer (int thread_count):
     ioc_{thread_count},
     acceptor_(ioc_)
 {}
 
-void HttpServer::listen (unsigned short port, Callback cb) {
+void Karich::HttpServer::listen (unsigned short port, Callback cb) {
     tcp::endpoint endpoint (tcp::v4(), port);
     try {
         acceptor_.open(endpoint.protocol());
@@ -23,71 +23,71 @@ void HttpServer::listen (unsigned short port, Callback cb) {
     }
 }
 
-void HttpServer::get(const std::string& path, Handler handler) {
+void Karich::HttpServer::get(const std::string& path, Handler handler) {
     router_.get(path, handler);
 }
 
-void HttpServer::post(const std::string& path, Handler handler) {
+void Karich::HttpServer::post(const std::string& path, Handler handler) {
     router_.post(path, handler);
 }
 
-void HttpServer::del(const std::string& path, Handler handler) {
+void Karich::HttpServer::del(const std::string& path, Handler handler) {
     router_.del(path, handler);
 }
 
-void HttpServer::update(const std::string& path, Handler handler) {
+void Karich::HttpServer::update(const std::string& path, Handler handler) {
     router_.update(path, handler);
 }
 
-void HttpServer::put(const std::string& path, Handler handler) {
+void Karich::HttpServer::put(const std::string& path, Handler handler) {
     router_.put(path, handler);
 }
 
-void HttpServer::patch(const std::string& path, Handler handler) {
+void Karich::HttpServer::patch(const std::string& path, Handler handler) {
     router_.patch(path, handler);
 }
 
-void HttpServer::use(const std::string& path, Middleware middleware) {
+void Karich::HttpServer::use(const std::string& path, Middleware middleware) {
     router_.use(path, middleware);
 }
 
-void HttpServer::use(const std::string& path, MiddlewareFunc middleware) {
+void Karich::HttpServer::use(const std::string& path, MiddlewareFunc middleware) {
     router_.use(path, middleware);
 }
 
-void HttpServer::use(const std::string& path, MiddlewareFuncPtr middleware) {
+void Karich::HttpServer::use(const std::string& path, MiddlewareFuncPtr middleware) {
     router_.use(path, middleware);
 }
 
-void HttpServer::use(Middleware middleware) {
+void Karich::HttpServer::use(Middleware middleware) {
     router_.use(middleware);
 }
 
-void HttpServer::use(MiddlewareFunc middleware) {
+void Karich::HttpServer::use(MiddlewareFunc middleware) {
     router_.use(middleware);
 }
 
-void HttpServer::use(MiddlewareFuncPtr middleware) {
+void Karich::HttpServer::use(MiddlewareFuncPtr middleware) {
     router_.use(middleware);
 }
 
-void HttpServer::print_routes () const {
+void Karich::HttpServer::print_routes () const {
     router_.print_routes();
 }
 
-void HttpServer::_do_accept() {
+void Karich::HttpServer::_do_accept() {
     try {
         while (true) {
             tcp::socket socket{ioc_};
             acceptor_.accept(socket);
-            std::thread{&HttpServer::_handle_session, this, std::move(socket)}.detach();
+            std::thread{&Karich::HttpServer::_handle_session, this, std::move(socket)}.detach();
         }
     } catch (const std::exception& e) {
         std::cerr << "Error: " << e.what() << "\n";
     }
 }
 
-void HttpServer::_handle_session(tcp::socket socket) {
+void Karich::HttpServer::_handle_session(tcp::socket socket) {
     try {
         beast::flat_buffer buffer;
         BeastReq req;
@@ -97,10 +97,10 @@ void HttpServer::_handle_session(tcp::socket socket) {
         BeastRes res{http::status::not_found, req.version()};
         res.set(http::field::server, "Boost.Beast");
 
-        Request wrapper_req(std::move(req));
-        Response wrapper_res(std::move(res));
+        Karich::Request wrapper_req(std::move(req));
+        Karich::Response wrapper_res(std::move(res));
 
-        auto [ms, routed] = time_calculate<bool>([&]() {
+        auto [ms, routed] = Karich::utils::time_calculate<bool>([&]() {
             return router_.route(wrapper_req, wrapper_res);
         });
 
@@ -121,10 +121,37 @@ void HttpServer::_handle_session(tcp::socket socket) {
     }
 }
 
-void HttpServer::_log_routing (int64_t ms, const Request& req, Response& res) const {
+void Karich::HttpServer::_log_routing (int64_t ms, const Karich::Request& req, Karich::Response& res) const {
     std::cout << "[" << req.method() << "] "
                   << req.url() << " -> "
                   << static_cast<unsigned>(res.raw().result_int()) << " "
                   << res.raw().result() << " ("
                   << ms << " ms)" << std::endl;
+}
+
+Middleware Karich::HttpServer::serve_static (const std::string& path) {
+    return Middleware([&path](Karich::Request& req, Karich::Response& res, Next& next){
+        std::string target = req.url();
+        if (target == "/")
+            target = "/index.html";
+
+        fs::path file_path = fs::path(path + target);
+
+        if (fs::exists(file_path) && fs::is_regular_file(file_path)) {
+            std::ifstream file(file_path, std::ios::binary);
+            if (!file.is_open()) {
+                res.send("Failed to open file").status(http::status::internal_server_error);
+                return;
+            }
+
+            std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+            res.set_header(http::field::content_type, Karich::utils::get_mime_type(file_path.string()));
+            res.send(std::move(content));
+            return;
+        }
+
+        // Not a static file — pass to next middleware or handler
+        next();
+    });
 }

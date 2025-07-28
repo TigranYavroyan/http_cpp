@@ -1,27 +1,27 @@
 #include <request.h>
 
-Request::Request (BeastReq&& req) : req_(std::move(req)) {}
+Karich::Request::Request (BeastReq&& req) : req_(std::move(req)) {}
 
-BeastReq& Request::raw () {
+BeastReq& Karich::Request::raw () {
     return req_;
 }
 
-void Request::set_body (const json& body) {
+void Karich::Request::set_body (const json& body) {
     json_body = body;
 }
 
-std::optional<json> Request::parsed_body () const {
+std::optional<json> Karich::Request::parsed_body () const {
     return json_body;
 }
 
-std::string Request::body () const {
+std::string Karich::Request::body () const {
     return req_.body();
 }
 
-std::string Request::url () const {
+std::string Karich::Request::url () const {
     return req_.target().to_string();
 }
 
-std::string Request::method () const {
+std::string Karich::Request::method () const {
     return req_.method_string().to_string();
 }

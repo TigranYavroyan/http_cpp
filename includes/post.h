@@ -5,7 +5,7 @@
 #include <request.h>
 #include <response.h>
 
-void submit (Request& req, Response& res);
-void pong (Request& req, Response& res);
+void submit (Karich::Request& req, Karich::Response& res);
+void pong (Karich::Request& req, Karich::Response& res);
 
 #endif // POST_HPP

@@ -3,7 +3,7 @@
 
 Middleware::Middleware(MiddlewareFunc func) : func_(std::move(func)) {}
 
-void Middleware::operator() (Request& req, Response& res, Next& next) {
+void Middleware::operator() (Karich::Request& req, Karich::Response& res, Next& next) {
     func_(req, res, next);
 }
 

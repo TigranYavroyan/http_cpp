@@ -1,11 +1,11 @@
 #include <get.h>
 
-void root (Request& req, Response& res) {
+void root (Karich::Request& req, Karich::Response& res) {
     res.set_header(http::field::content_type, "text/html");
     res.send("<h1>Hello from router</h1>").status(200);
 }
 
-void index_html (Request& req, Response& res) {
+void index_html (Karich::Request& req, Karich::Response& res) {
     std::ifstream file("/home/tigran/Desktop/learn/http_cpp/public/index.html");
     if (!file) {
         res.send("File not found");
