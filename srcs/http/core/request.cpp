@@ -19,9 +19,9 @@ std::string Karich::Request::body () const {
 }
 
 std::string Karich::Request::url () const {
-    return req_.target().to_string();
+    return std::string(req_.target());
 }
 
 std::string Karich::Request::method () const {
-    return req_.method_string().to_string();
+    return std::string(req_.method_string());
 }

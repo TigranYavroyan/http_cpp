@@ -10,5 +10,6 @@ add_subdirectory(srcs) # SRCS_FILES
 add_executable(server server.cpp)
 target_link_libraries(server PRIVATE SRCS_FILES)
 
+target_compile_options(server PRIVATE -g3)
 target_include_directories(server PRIVATE includes)
 target_include_directories(server PRIVATE ${Boost_INCLUDE_DIRS})

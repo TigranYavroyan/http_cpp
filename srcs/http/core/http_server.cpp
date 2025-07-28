@@ -113,7 +113,7 @@ void Karich::HttpServer::_handle_session(tcp::socket socket) {
 
         beast::error_code ec;
         socket.shutdown(tcp::socket::shutdown_send, ec);
-        if(ec.failed()) {
+        if(ec) {
             std::cerr << "Error: " << ec.message() << std::endl;
         }
     } catch (const std::exception& e) {
@@ -147,7 +147,8 @@ Middleware Karich::HttpServer::serve_static (const std::string& path) {
             std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
 
             res.set_header(http::field::content_type, Karich::utils::get_mime_type(file_path.string()));
-            res.send(std::move(content));
+            res.send(std::move(content)).status(http::status::ok);
+            file.close();
             return;
         }
 

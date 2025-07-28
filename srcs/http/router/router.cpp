@@ -29,34 +29,26 @@ void Router::patch(const std::string& path, Handler handler) {
 
 bool Router::route(Karich::Request& req, Karich::Response& res) const {
 
-    #if 0
     std::lock_guard<std::mutex> l(m);
     std::string path = req.url();
     std::string key = req.method() + ": " + path;
     auto it = routes_.find(key);
-    if (it == routes_.end())
-        return false;
     
     std::vector<Middleware> router_spec_middlewares = pre_handlers;
-    auto [begin, end] = middlewares.equal_range(path);
-    for(; begin != end; ++begin) {
-        router_spec_middlewares.push_back(begin->second);
+
+    if (it != routes_.end()) {
+        auto [begin, end] = middlewares.equal_range(path);
+        for(; begin != end; ++begin) {
+            router_spec_middlewares.push_back(begin->second);
+        }
+        router_spec_middlewares.emplace_back([handler = it->second](Karich::Request& req, Karich::Response& res, Next& next){
+            handler(req, res);
+        });
     }
-    #endif
-    /**
-     * 
-     * ! Maybe you must change the logic of routing, because the middleware like static file serving is not working for this logic
-     * 
-    */
-    #if 0
-    router_spec_middlewares.emplace_back([handler = it->second](Karich::Request& req, Karich::Response& res, Next& next){
-        handler(req, res);
-    });
 
     Next next(router_spec_middlewares, req, res);
 
     return next();
-    #endif
 }
 
 void Router::use(const std::string& path, Middleware middleware) {

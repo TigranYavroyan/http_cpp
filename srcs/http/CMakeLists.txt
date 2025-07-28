@@ -4,7 +4,6 @@ add_library(HTTP STATIC)
 
 target_sources(HTTP PRIVATE
 	utils/get_mime_type.cpp
-	utils/serve_static.cpp
     router/router.cpp
     core/next.cpp
     core/middleware.cpp

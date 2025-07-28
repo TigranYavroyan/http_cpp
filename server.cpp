@@ -9,7 +9,7 @@
 #include <http_server.h>
 
 int main() {
-    dotenv::init("/home/tigran/Desktop/learn/http_cpp/.env");
+    dotenv::init("../.env");
     std::string port = std::getenv("PORT");
     project_root = std::getenv("PROJECT_ROOT");
 
@@ -19,7 +19,7 @@ int main() {
     http_server.post("/user", pong);
 
     http_server.use(json_parser);
-    http_server.use(http_server.serve_static("/home/tigran/Desktop/learn/http_cpp/public"));
+    http_server.use(http_server.serve_static("../public"));
 
     http_server.listen(std::stoi(port), [&](){
         std::cout << "Listening on port " << port << "...\n" << std::endl;

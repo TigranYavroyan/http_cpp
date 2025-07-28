@@ -6,8 +6,6 @@
 #include <response.h>
 
 namespace Karich::utils {
-	void serve_static(Karich::Request& req, Karich::Response& res);
-
 	std::string_view get_mime_type(const std::string& path);
 
 	template <typename T, typename Callable, typename... Args>
