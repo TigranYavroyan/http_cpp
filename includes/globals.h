@@ -8,7 +8,7 @@ namespace Karich {
 	class globals {
 #ifdef PROJECT_ROOT
 	private:
-		static std::string project_root;
+		const static std::string project_root;
 	public:
 		static const std::string& get_project_root ();
 #else

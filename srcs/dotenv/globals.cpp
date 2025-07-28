@@ -2,7 +2,7 @@
 
 namespace Karich {
 	#ifdef PROJECT_ROOT
-		std::string globals::project_root = PROJECT_ROOT;
+		const std::string globals::project_root = PROJECT_ROOT;
 		const std::string& globals::get_project_root () {
 			return project_root;
 		}
