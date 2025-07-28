@@ -47,6 +47,14 @@ http_cpp/
 - CMake ≥ 3.10
 - C++17 compiler
 - Boost (Beast, Asio)
+- nlohmann::json
+
+### Install Dependencies
+
+```bash
+sudo apt update
+sudo apt install libboost-all-dev nlohmann-json3-dev
+```
 
 ### Configuration
 
