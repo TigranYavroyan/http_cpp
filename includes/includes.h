@@ -23,10 +23,6 @@ namespace fs = std::filesystem;
 using tcp = net::ip::tcp;
 using json = nlohmann::json;
 
-namespace Karich::globals {
-	extern std::string project_root;
-}
-
 namespace Karich {
 	class Request;
 	class Response;
