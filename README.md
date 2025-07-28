@@ -72,7 +72,7 @@ You can configure port and other values via `.env`:
 PORT=8080
 ```
 
-If using `PROJECT_ROOT` to locate `.env`, define it when compiling (I recomend to define it in the Top CMakeLists.txt file):
+If using `PROJECT_ROOT` to locate `.env`, define it when compiling (I recomend to define it in srcs/CMakeLists.txt file):
 
 ```bash
 -DPROJECT_ROOT="\"./http_cpp/\""
@@ -81,7 +81,7 @@ If using `PROJECT_ROOT` to locate `.env`, define it when compiling (I recomend t
 or
 
 ```cmake
-set(PROJECT_ROOT "/home/tigran/Desktop/learn/http_cpp")
+set(PROJECT_ROOT /home/tigran/Desktop/learn/http_cpp)
 ```
 
 Code snippet:
