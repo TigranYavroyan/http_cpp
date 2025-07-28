@@ -116,7 +116,16 @@ void Karich::HttpServer::_handle_session(tcp::socket socket) {
         if(ec) {
             std::cerr << "Error: " << ec.message() << std::endl;
         }
-    } catch (const std::exception& e) {
+    } 
+    catch (const boost::system::system_error& se) {
+        if (se.code() == http::error::end_of_stream) {
+            std::cerr << "Client closed connection early.\n" << std::endl;
+            return;
+        } else {
+            std::cerr << "System error: " << se.code().message() << std::endl;
+        }
+    }
+    catch (const std::exception& e) {
         std::cerr << "Session Error: " << e.what() << std::endl;
     }
 }
