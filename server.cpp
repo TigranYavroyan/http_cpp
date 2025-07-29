@@ -1,5 +1,4 @@
 #include <cstring>
-
 #include <router.hpp>
 #include <post.h>
 #include <get.h>
@@ -10,6 +9,7 @@
 #include <middlewares.h>
 #include <http_server.hpp>
 #include <globals.h>
+#include <request.h>
 
 using namespace Karich;
 
@@ -23,6 +23,10 @@ int main() {
 
     r.get("/name", [](Request& req, Response& res){
         res.send("My name is gegham").status(200);
+        auto params = req.params();
+        for (auto [key, value] : params) {
+            std::cout << key << ": " << value << std::endl;
+        }
     });
 
     r.post("/name", [](Request& req, Response& res){

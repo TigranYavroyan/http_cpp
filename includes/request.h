@@ -15,11 +15,13 @@ namespace Karich {
         void set_body (const json& body);
         std::optional<json> parsed_body () const;
         std::string body () const;
+        std::unordered_map<std::string, std::string> params () const;
         std::string url () const;
         std::string method () const;
     private:
         BeastReq req_;
-        std::optional<json> json_body;
+        std::optional<json> json_body_;
+        std::unordered_map<std::string, std::string> params_;
     };
 
 }
