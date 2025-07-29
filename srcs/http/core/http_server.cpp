@@ -1,4 +1,4 @@
-#include <http_server.h>
+#include <http_server.hpp>
 #include <thread>
 #include <utils.h>
 #include <is_middleware.hpp>
@@ -45,30 +45,6 @@ void Karich::HttpServer::put(const std::string& path, Handler handler) {
 
 void Karich::HttpServer::patch(const std::string& path, Handler handler) {
     router_.patch(path, handler);
-}
-
-void Karich::HttpServer::use(const std::string& path, Middleware middleware) {
-    router_.use(path, middleware);
-}
-
-void Karich::HttpServer::use(const std::string& path, MiddlewareFunc middleware) {
-    router_.use(path, middleware);
-}
-
-void Karich::HttpServer::use(const std::string& path, MiddlewareFuncPtr middleware) {
-    router_.use(path, middleware);
-}
-
-void Karich::HttpServer::use(Middleware middleware) {
-    router_.use(middleware);
-}
-
-void Karich::HttpServer::use(MiddlewareFunc middleware) {
-    router_.use(middleware);
-}
-
-void Karich::HttpServer::use(MiddlewareFuncPtr middleware) {
-    router_.use(middleware);
 }
 
 void Karich::HttpServer::print_routes () const {

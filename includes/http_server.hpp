@@ -4,7 +4,7 @@
 #include <includes.h>
 #include <request.h>
 #include <response.h>
-#include <router.h>
+#include <router.hpp>
 #include <type_traits>
 #include <is_middleware.hpp>
 
@@ -36,13 +36,14 @@ namespace Karich {
         template <typename... Mids>
         std::enable_if_t<are_all_middlewares_v<Mids...>>
         use(const std::string& path, Mids... ms);
-        
-        void use(const std::string& path, Middleware middleware);
-        void use(const std::string& path, MiddlewareFunc middleware);
-        void use(const std::string& path, MiddlewareFuncPtr middleware);
-        void use(Middleware middleware);
-        void use(MiddlewareFunc middleware);
-        void use(MiddlewareFuncPtr middleware);
+
+        template <typename Mid>
+        std::enable_if_t<is_middleware_like_v<Mid>>
+        use(Mid ms);
+    
+        template <typename Mid>
+        std::enable_if_t<is_middleware_like_v<Mid>>
+        use(const std::string& path, Mid ms);
     
         Middleware serve_static(const std::string& path);
     
@@ -56,6 +57,12 @@ namespace Karich {
         tcp::acceptor acceptor_;
         Router router_;
     };
+
+    template <typename... Mids>
+    std::enable_if_t<are_all_middlewares_v<Mids...>>
+    HttpServer::use(const std::string& path, Mids... ms) {
+        (use(path, ms), ...);
+    }
     
     template <typename... Mids>
     std::enable_if_t<are_all_middlewares_v<Mids...>>
@@ -63,10 +70,17 @@ namespace Karich {
         (use(ms), ...);
     }
     
-    template <typename... Mids>
-    std::enable_if_t<are_all_middlewares_v<Mids...>>
-    HttpServer::use(const std::string& path, Mids... ms) {
-        (use(path, ms), ...);
+
+    template <typename Mid>
+    std::enable_if_t<is_middleware_like_v<Mid>>
+    HttpServer::use(const std::string& path, Mid middleware) {
+        router_.use(path, middleware);
+    }
+
+    template <typename Mid>
+    std::enable_if_t<is_middleware_like_v<Mid>>
+    HttpServer::use(Mid middleware) {
+        router_.use(middleware);
     }
 }
 

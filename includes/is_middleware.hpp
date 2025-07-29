@@ -5,22 +5,12 @@
 #include <middleware.h>
 
 template <typename T>
-struct is_valid_middleware_type : std::false_type {};
-
-template <>
-struct is_valid_middleware_type<Karich::Middleware> : std::true_type {};
-
-template <>
-struct is_valid_middleware_type<Karich::MiddlewareFunc> : std::true_type {};
-
-template <>
-struct is_valid_middleware_type<Karich::MiddlewareFuncPtr> : std::true_type {};
-
-template <typename T>
-constexpr bool is_valid_middleware_v = is_valid_middleware_type<T>::value;
+constexpr bool is_middleware_like_v = std::is_invocable_r_v<
+    void, T, Karich::Request&, Karich::Response&, Karich::Next&
+>;
 
 template <typename... Mids>
-struct are_all_middlewares : std::conjunction<is_valid_middleware_type<Mids>...> {};
+struct are_all_middlewares : std::bool_constant<(is_middleware_like_v<Mids> && ...)> {};
 
 template <typename... Mids>
 constexpr bool are_all_middlewares_v = are_all_middlewares<Mids...>::value;

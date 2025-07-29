@@ -10,7 +10,6 @@ namespace Karich {
     class Middleware;
     
     using MiddlewareFunc = std::function<void(Request&, Response&, Next&)>;
-    using MiddlewareFuncPtr = void(*)(Request&, Response&, Next&);
     
     class Middleware {
     public:

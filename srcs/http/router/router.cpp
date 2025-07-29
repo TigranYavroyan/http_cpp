@@ -1,4 +1,4 @@
-#include <router.h>
+#include <router.hpp>
 
 Karich::Router::Router () {}
 
@@ -49,30 +49,6 @@ bool Karich::Router::route(Karich::Request& req, Karich::Response& res) const {
     Karich::Next next(router_spec_middlewares, req, res);
 
     return next();
-}
-
-void Karich::Router::use(const std::string& path, Karich::Middleware middleware) {
-    middlewares.insert({path, middleware});
-}
-
-void Karich::Router::use(const std::string& path, Karich::MiddlewareFunc middleware) {
-    middlewares.insert({path, middleware});
-}
-
-void Karich::Router::use(Karich::Middleware middleware) {
-    pre_handlers.push_back(middleware);
-}
-
-void Karich::Router::use(Karich::MiddlewareFunc middleware) {
-    pre_handlers.emplace_back(middleware);
-}
-
-void Karich::Router::use(const std::string& path, Karich::MiddlewareFuncPtr middleware) {
-    pre_handlers.emplace_back(middleware);
-}
-
-void Karich::Router::use(Karich::MiddlewareFuncPtr middleware) {
-    pre_handlers.emplace_back(middleware);
 }
 
 void Karich::Router::print_routes() const {

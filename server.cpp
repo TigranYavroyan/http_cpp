@@ -1,6 +1,6 @@
 #include <cstring>
 
-#include <router.h>
+#include <router.hpp>
 #include <post.h>
 #include <get.h>
 #include <utils.h>
@@ -8,8 +8,10 @@
 #include <middleware.h>
 #include <next.h>
 #include <middlewares.h>
-#include <http_server.h>
+#include <http_server.hpp>
 #include <globals.h>
+
+using namespace Karich;
 
 int main() {
     std::string env_path = Karich::globals::get_project_root() + ".env";
@@ -23,7 +25,6 @@ int main() {
 
     http_server.use(json_parser);
     http_server.use(http_server.serve_static(Karich::globals::get_project_root() + "public"));
-
 
     http_server.listen(std::stoi(port), [&](){
         std::cout << "Listening on port " << port << "...\n" << std::endl;

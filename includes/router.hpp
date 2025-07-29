@@ -2,6 +2,7 @@
 #define ROUTER_H
 
 #include <middleware.h>
+#include <is_middleware.hpp>
 #include <next.h>
 #include <mutex>
 
@@ -22,12 +23,13 @@ namespace Karich {
         void put(const std::string& path, Handler handler);
         void patch(const std::string& path, Handler handler);
     
-        void use(const std::string& path, Middleware middleware);
-        void use(const std::string& path, MiddlewareFunc middleware);
-        void use(const std::string& path, MiddlewareFuncPtr middleware);
-        void use(Middleware middleware);
-        void use(MiddlewareFunc middleware);
-        void use(MiddlewareFuncPtr middleware);
+        template <typename Mid>
+        std::enable_if_t<is_middleware_like_v<Mid>>
+        use(Mid ms);
+    
+        template <typename Mid>
+        std::enable_if_t<is_middleware_like_v<Mid>>
+        use(const std::string& path, Mid ms);
     
         bool route(Karich::Request& req, Karich::Response& res) const;
         void print_routes() const;
@@ -37,6 +39,18 @@ namespace Karich {
         std::unordered_multimap<std::string, Middleware> middlewares;
         mutable std::mutex m;
     };
+
+    template <typename Mid>
+    std::enable_if_t<is_middleware_like_v<Mid>>
+    Router::use(const std::string& path, Mid middleware) {
+        middlewares.insert({path, Karich::Middleware(middleware)});
+    }
+
+    template <typename Mid>
+    std::enable_if_t<is_middleware_like_v<Mid>>
+    Router::use(Mid middleware) {
+        pre_handlers.push_back(Karich::Middleware(middleware));
+    }
 }
 
 #endif // ROUTER_H
