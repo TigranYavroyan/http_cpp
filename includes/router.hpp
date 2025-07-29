@@ -8,6 +8,9 @@
 
 namespace Karich {
     class Router {
+        using UnderlyingRouteHandler = std::unordered_map<std::string, Handler>;
+        using RouteHandlers = std::unordered_map<std::string, UnderlyingRouteHandler>;
+        using MiddlewareHandlers = std::unordered_multimap<std::string, Middleware>;
     public:
         Router();
     
@@ -35,8 +38,8 @@ namespace Karich {
         void print_routes() const;
     private:
         std::vector<Middleware> pre_handlers;
-        std::unordered_map<std::string, Handler> routes_;
-        std::unordered_multimap<std::string, Middleware> middlewares;
+        RouteHandlers routes_;
+        MiddlewareHandlers middlewares;
         mutable std::mutex m;
     };
 

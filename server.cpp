@@ -14,17 +14,18 @@
 using namespace Karich;
 
 int main() {
-    std::string env_path = Karich::globals::get_project_root() + ".env";
+    std::string env_path = globals::get_project_root() + ".env";
     dotenv::init(env_path.c_str());
     std::string port = std::getenv("PORT");
 
-    Karich::HttpServer http_server;
+    HttpServer http_server;
+    Router r = Router();
 
     http_server.post("/submit", submit);
     http_server.post("/user", pong);
 
     http_server.use(json_parser);
-    http_server.use(http_server.serve_static(Karich::globals::get_project_root() + "public"));
+    http_server.use(http_server.serve_static(globals::get_project_root() + "public"));
 
     http_server.listen(std::stoi(port), [&](){
         std::cout << "Listening on port " << port << "...\n" << std::endl;
