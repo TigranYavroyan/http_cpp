@@ -6,8 +6,12 @@
 #include <next.h>
 #include <mutex>
 
+
 namespace Karich {
+    class HttpServer;
+
     class Router {
+        friend HttpServer;
         using UnderlyingRouteHandler = std::unordered_map<std::string, Handler>;
         using RouteHandlers = std::unordered_map<std::string, UnderlyingRouteHandler>;
         using MiddlewareHandlers = std::unordered_multimap<std::string, Middleware>;
@@ -34,9 +38,11 @@ namespace Karich {
         std::enable_if_t<is_middleware_like_v<Mid>>
         use(const std::string& path, Mid ms);
     
-        bool route(Karich::Request& req, Karich::Response& res) const;
+        bool route(Request& req, Response& res) const;
         void print_routes() const;
     private:
+        void _use_handler (const std::string& method, const std::string& path, Handler h);
+
         std::vector<Middleware> pre_handlers;
         RouteHandlers routes_;
         MiddlewareHandlers middlewares;
@@ -46,13 +52,13 @@ namespace Karich {
     template <typename Mid>
     std::enable_if_t<is_middleware_like_v<Mid>>
     Router::use(const std::string& path, Mid middleware) {
-        middlewares.insert({path, Karich::Middleware(middleware)});
+        middlewares.insert({path, Middleware(middleware)});
     }
 
     template <typename Mid>
     std::enable_if_t<is_middleware_like_v<Mid>>
     Router::use(Mid middleware) {
-        pre_handlers.push_back(Karich::Middleware(middleware));
+        pre_handlers.push_back(Middleware(middleware));
     }
 }
 

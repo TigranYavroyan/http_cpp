@@ -21,8 +21,17 @@ int main() {
     HttpServer http_server;
     Router r = Router();
 
+    r.get("/name", [](Request& req, Response& res){
+        res.send("My name is gegham").status(200);
+    });
+
+    r.post("/name", [](Request& req, Response& res){
+        std::string name = req.parsed_body().value()["name"];
+        res.send("Your name is " + name).status(200);
+    });
+
     http_server.post("/submit", submit);
-    http_server.post("/user", pong);
+    http_server.use("/user", r);
 
     http_server.use(json_parser);
     http_server.use(http_server.serve_static(globals::get_project_root() + "public"));

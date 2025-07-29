@@ -28,6 +28,8 @@ namespace Karich {
         void update(const std::string& path, Handler handler);
         void put(const std::string& path, Handler handler);
         void patch(const std::string& path, Handler handler);
+
+        void use(const std::string& prefix, const Router& r);
         
         template <typename... Mids>
         std::enable_if_t<are_all_middlewares_v<Mids...>>
@@ -44,6 +46,7 @@ namespace Karich {
         template <typename Mid>
         std::enable_if_t<is_middleware_like_v<Mid>>
         use(const std::string& path, Mid ms);
+
     
         Middleware serve_static(const std::string& path);
     
@@ -51,7 +54,7 @@ namespace Karich {
     private:
         void _do_accept();
         void _handle_session(tcp::socket socket);
-        void _log_routing (int64_t ms, const Karich::Request& req, Karich::Response& res) const;
+        void _log_routing (int64_t ms, const Request& req, Response& res) const;
     
         net::io_context ioc_;
         tcp::acceptor acceptor_;
