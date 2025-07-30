@@ -11,9 +11,6 @@ namespace Karich {
         }
 
         _parse_query(full_url, query_begin);
-
-        if (url_.find(':') == std::string::npos)
-            return;
     }
     
     BeastReq& Request::raw () {
