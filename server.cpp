@@ -22,11 +22,11 @@ int main() {
     Router r = Router();
 
     r.get("/name", [](Request& req, Response& res){
-        res.send("My name is gegham").status(200);
-        auto params = req.params();
-        for (auto [key, value] : params) {
+        auto query = req.queries();
+        for (auto [key, value] : query) {
             std::cout << key << ": " << value << std::endl;
         }
+        res.send("My name is gegham/n").status(200);
     });
 
     r.post("/name", [](Request& req, Response& res){

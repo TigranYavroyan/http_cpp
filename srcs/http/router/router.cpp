@@ -31,7 +31,7 @@ namespace Karich {
     
         std::lock_guard<std::mutex> l(m);
         std::string path = req.url();
-    
+        std::cout << "path: " << '[' << path << ']' << std::endl;
         auto pair = routes_.find(req.method());
         UnderlyingRouteHandler map;
         Router::UnderlyingRouteHandler::iterator it(map.end());

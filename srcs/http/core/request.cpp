@@ -2,14 +2,20 @@
 
 namespace Karich {
     Request::Request (BeastReq&& req) : req_(std::move(req)) {
-        auto full_url = req.target();
+        auto full_url = req_.target();
         auto query_begin = full_url.find('?');
-
-        if (query_begin == boost::beast::string_view::npos)
-            return;
         
-        std::string query(query_begin, full_url.size());
+        if (query_begin == boost::beast::string_view::npos) {
+            url_ = std::string(full_url);
+            return;
+        }
+        
+        url_ = full_url.substr(0, query_begin);
+        std::string query(full_url, query_begin + 1, full_url.size() - query_begin);
+        std::cout << query << std::endl;
         std::size_t start = 0;
+
+        // ! not handling edge cases
         while (start < query.size()) {
             auto end = query.find('&', start);
             if (end == std::string::npos) end = query.size();
@@ -18,7 +24,7 @@ namespace Karich {
             if (sep != std::string::npos && sep < end) {
                 std::string key = query.substr(start, sep - start);
                 std::string val = query.substr(sep + 1, end - sep - 1);
-                params_[key] = val;
+                queries_[key] = val;
             }
 
             start = end + 1;
@@ -42,14 +48,14 @@ namespace Karich {
     }
     
     std::string Request::url () const {
-        return std::string(req_.target());
+        return url_;
     }
     
     std::string Request::method () const {
         return std::string(req_.method_string());
     }
 
-    std::unordered_map<std::string, std::string> Request::params () const {
-        return params_;
+    std::unordered_map<std::string, std::string> Request::queries () const {
+        return queries_;
     }
 }
