@@ -19,6 +19,8 @@ namespace Karich {
         std::string url () const;
         std::string method () const;
     private:
+        void _parse_query (const std::string& full_url, std::size_t query_begin);
+
         BeastReq req_;
         std::optional<json> json_body_;
         std::unordered_multimap<std::string, std::string> queries_;
