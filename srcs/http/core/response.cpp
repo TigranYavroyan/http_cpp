@@ -1,4 +1,6 @@
 #include <response.h>
+#include <utils.h>
+#include <fstream>
 
 namespace Karich {
     Response::Response() : sent_(false) {
@@ -53,6 +55,19 @@ namespace Karich {
         res_.body() = body;
         res_.prepare_payload();
         sent_ = true;
+        return *this;
+    }
+
+    Response& Response::send_file(const std::string& file_path) {
+        std::ifstream file(file_path, std::ios::binary);
+        if (!file.is_open())
+            throw std::invalid_argument("Can't open the file: " + file_path);
+
+        std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+
+        set_header(http::field::content_type, utils::get_mime_type(file_path));
+        send(std::move(content));
+        file.close();
         return *this;
     }
     

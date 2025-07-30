@@ -134,17 +134,14 @@ namespace Karich {
     
             fs::path file_path = fs::path(path + target);
             if (fs::exists(file_path) && fs::is_regular_file(file_path)) {
-                std::ifstream file(file_path, std::ios::binary);
-                if (!file.is_open()) {
-                    res.send("Failed to open file").status(http::status::internal_server_error);
-                    return;
+                try {
+                    res.send_file(file_path.string());
+                    res.status(http::status::ok);
                 }
-    
-                std::string content((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-    
-                res.set_header(http::field::content_type, utils::get_mime_type(file_path.string()));
-                res.send(std::move(content)).status(http::status::ok);
-                file.close();
+                catch (const std::exception& e) {
+                    std::cerr << e.what() << std::endl;
+                    res.send("Failed to open file").status(http::status::internal_server_error);
+                }
                 return;
             }
     

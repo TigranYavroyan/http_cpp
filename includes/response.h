@@ -19,6 +19,7 @@ namespace Karich {
         Response& status(beast::http::status s);
 
         Response& send(const std::string& body);
+        Response& send_file(const std::string& file_path);
         Response& json(const nlohmann::json& obj);
         Response& err(const std::string& msg = "Not found");
         BeastRes& raw();
