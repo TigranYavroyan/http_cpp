@@ -2,11 +2,11 @@
 
 namespace Karich {
     Request::Request (BeastReq&& req) : req_(std::move(req)) {
-        auto full_url = req_.target();
+        std::string full_url = std::string(req_.target());
         auto query_begin = full_url.find('?');
         
         if (query_begin == boost::beast::string_view::npos) {
-            url_ = std::string(full_url);
+            url_ = full_url;
             return;
         }
         
@@ -14,17 +14,23 @@ namespace Karich {
         std::string query(full_url, query_begin + 1, full_url.size() - query_begin);
         std::cout << query << std::endl;
         std::size_t start = 0;
+        std::string key;
+        std::string val;
 
-        // ! not handling edge cases
         while (start < query.size()) {
             auto end = query.find('&', start);
             if (end == std::string::npos) end = query.size();
 
             auto sep = query.find('=', start);
             if (sep != std::string::npos && sep < end) {
-                std::string key = query.substr(start, sep - start);
-                std::string val = query.substr(sep + 1, end - sep - 1);
-                queries_[key] = val;
+                key = query.substr(start, sep - start);
+                val = query.substr(sep + 1, end - sep - 1);
+                queries_.insert({key, val});
+            }
+            else if (sep == std::string::npos || end == query.size() || query[end] == '&') {
+                key = query.substr(start, end - start);
+                if (!key.empty())
+                    queries_.insert({key, ""});
             }
 
             start = end + 1;
@@ -55,7 +61,7 @@ namespace Karich {
         return std::string(req_.method_string());
     }
 
-    std::unordered_map<std::string, std::string> Request::queries () const {
+    std::unordered_multimap<std::string, std::string> Request::queries () const {
         return queries_;
     }
 }
